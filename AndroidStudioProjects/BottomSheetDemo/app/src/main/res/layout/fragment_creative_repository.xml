@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.CreativeRepositoryFragment">
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <EditText
+            android:background="@drawable/custom_search_input_design"
+            android:layout_marginLeft="10dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:id="@+id/search_creative_btn"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawablePadding="12dp"
+            android:hint="Search"
+            android:layout_width="320dp"
+            android:layout_height="40dp"/>
+
+        <ImageButton
+            android:background="@android:color/white"
+            android:layout_toRightOf="@id/search_creative_btn"
+            android:src="@drawable/ic_search_bar"
+            android:id="@+id/filter_btn"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"/>
+
+
+    </RelativeLayout>
+    <WebView
+        android:id="@+id/web_view"
+        android:layout_below="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+</RelativeLayout>

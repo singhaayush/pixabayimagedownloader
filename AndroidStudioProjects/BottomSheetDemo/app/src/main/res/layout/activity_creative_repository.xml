@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CreativeRepositoryActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/creative_collection_toolbar"
+        android:layout_width="match_parent"
+        android:background="@color/class_plus_toolbar_color"
+        app:title="Select from Library"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_24"
+        app:titleTextColor="@android:color/white"
+        app:titleTextAppearance="@android:style/TextAppearance.Large"
+        android:gravity="center"
+        android:layout_height="60dp"/>
+    <WebView
+        android:visibility="gone"
+        android:id="@+id/web_view_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <FrameLayout
+        android:id="@+id/creative_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>
