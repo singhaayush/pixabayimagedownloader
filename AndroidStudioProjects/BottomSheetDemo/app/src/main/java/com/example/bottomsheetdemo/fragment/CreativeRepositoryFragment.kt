@@ -1,5 +1,6 @@
 package com.example.bottomsheetdemo.fragment
 
+import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import pub.devrel.easypermissions.EasyPermissions
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -28,7 +30,12 @@ import kotlinx.coroutines.launch
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class CreativeRepositoryFragment : Fragment() ,AndroidInterface.DownloadButtonClickListener{
+class CreativeRepositoryFragment : Fragment() ,AndroidInterface.DownloadButtonClickListener,
+    EasyPermissions.PermissionCallbacks ,MyChromeClient.ImageSelectedListener{
+
+   companion object {
+       var CURRENT_IMG_URL:String?=null
+   }
     private  val TAG = "CreativeRepositoryFragm"
     lateinit var mListener: CreativeRepositoryFragmentListener
     lateinit var url:String
@@ -63,19 +70,19 @@ class CreativeRepositoryFragment : Fragment() ,AndroidInterface.DownloadButtonCl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val exampleBottomSheetFragment=CreativeRepositoryFilterFragment()
-        filter_btn.setOnClickListener{
-            exampleBottomSheetFragment.show(fragmentManager!!,"")
-        }
+
         web_view.also {
             it.addJavascriptInterface(AndroidInterface(this),"Android")
             it.webViewClient= object :WebViewClient(){
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
+
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     loadJS(it)
+
                 }
 
                 override fun onLoadResource(view: WebView?, url: String?) {
@@ -91,7 +98,7 @@ class CreativeRepositoryFragment : Fragment() ,AndroidInterface.DownloadButtonCl
                     return super.shouldOverrideUrlLoading(view, request)
                 }
             }
-            it.webChromeClient=MyChromeClient(view.context)
+            it.webChromeClient=MyChromeClient(this)
         }
         var settings=web_view.settings
 
@@ -101,6 +108,7 @@ class CreativeRepositoryFragment : Fragment() ,AndroidInterface.DownloadButtonCl
             it.cacheMode=WebSettings.LOAD_CACHE_ELSE_NETWORK
             it.domStorageEnabled=true
             it.javaScriptEnabled=true
+
             it.setRenderPriority(WebSettings.RenderPriority.HIGH)
             it.savePassword=true
 
@@ -173,11 +181,12 @@ class CreativeRepositoryFragment : Fragment() ,AndroidInterface.DownloadButtonCl
     fun loadJS(webView:WebView){
         webView.loadUrl(
             """javascript:(function f() {
-        var links = document.getElementsByClassName('dl_btn pure-button button-green button-md ua-download-button');
-        for (var i = 0, n = links.length; i < n; i++) {
+        var divs = document.getElementsByClassName('ImageCard_CardItem__7WuK1');
+        for (var i = 0, n = divs.length; i < n; i++) {
              
-            links[i].addEventListener('click',function(){
-               Android.onButtonsClicked(this.href)
+            divs[i].addEventListener('click',function(){
+               var images =this.getElementsByTagName('img');
+               Android.onButtonsClicked(images[0].src);
             })
           
         }
@@ -187,11 +196,40 @@ class CreativeRepositoryFragment : Fragment() ,AndroidInterface.DownloadButtonCl
 
     override fun onDownloadButtonClicked(url: String) {
            GlobalScope.launch (Dispatchers.Main){
-           val newUrl =url.replace("?attachment","")
-             mListener2.onImageClicked(newUrl)
+//           val newUrl =url.replace("?attachment","")
+//             mListener2.onImageClicked(newUrl)
+
+               CURRENT_IMG_URL=url
          }
     }
 
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+    }
+
+    override fun onImageSelected() {
+        GlobalScope.launch (Dispatchers.Main){
+            CURRENT_IMG_URL?.let { mListener2.onImageClicked(it) }
+
+        }
+    }
 
 
 }
+//fun loadJS(webView:WebView){
+//    webView.loadUrl(
+//        """javascript:(function f() {
+//        var links = document.getElementsByTagName('ImagePreviewCard_DownloadButton__29eoq');
+//        for (var i = 0, n = links.length; i < n; i++) {
+//
+//            links[i].addEventListener('click',function(){
+//               Android.onButtonsClicked("this.href")
+//            })
+//
+//        }
+//      })()"""
+//    )
+//}

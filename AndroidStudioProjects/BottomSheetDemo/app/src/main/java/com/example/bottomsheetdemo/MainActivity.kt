@@ -9,10 +9,11 @@ import com.example.bottomsheetdemo.fragment.CreativeRepositoryFragment
 import com.example.bottomsheetdemo.utils.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
-
+//https://pixabay.com/
+//"https://marketingmobile.surge.sh/"
 class MainActivity : AppCompatActivity() {
     companion object {
-        const val URL = "https://pixabay.com/photos"
+        const val URL = "https://marketingmobile.surge.sh/"
         const val FETCH_PHOTO_REQUEST_CODE = 1
     }
 
@@ -44,17 +45,15 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FETCH_PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            var url=data?.getStringExtra("resultUrl")
+            var url = data?.getStringExtra("resultUrl")
             if (url != null) {
-                url=url.replace("?attachment","")
+                url = url.replace("?attachment", "")
             }
             Glide.with(this)
-                .load("https://pixabay.com/get/54e6d245495bae14f6d1867dda29317b113edbe75a4c704c7c2878d6974ac159_1920.jpg")
+                .load(url)
                 .into(iv_result_image);
 
-          //  https://pixabay.com/images/download/machine-5213060_1920.jpg
         }
-        //https://pixabay.com/get/54e6d245495bae14f6d1867dda29317b113edbe75a4c704c7c2878d6974ac159_1920.jpg
     }
 
 }
